@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -99,7 +100,7 @@ class Login extends React.Component {
         </form>
         <br />
         <div>
-          <a href="#">Forgot Password?</a>
+          <Link to={'/password'}>Forgot Password?</Link>
         </div>
       </div>
     )

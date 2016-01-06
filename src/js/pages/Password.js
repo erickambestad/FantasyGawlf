@@ -1,5 +1,8 @@
 import React from 'react'
 
+import Firebase from 'firebase'
+var ref = new Firebase("https://fantasygawlf.firebaseio.com")
+
 class Password extends React.Component {
 
   constructor(props) {
@@ -13,8 +16,18 @@ class Password extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    alert('email has been sent!')
-    location.href = "/"
+    ref.resetPassword({
+      email : this.refs.email.value
+    }, (error) => {
+      if (error === null) {
+        alert('Email has been sent with further details to ' + this.refs.email.value)
+        location.href = "/"
+      } else {
+        this.setState({
+          error: 'There was a problem. Please try again.'
+        })
+      }
+    });
   }
 
   render() {

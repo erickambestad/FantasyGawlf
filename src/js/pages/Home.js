@@ -17,7 +17,9 @@ class Home extends React.Component {
     super(props)
 
     this.state = {
-      loggedIn: !!authData
+      loggedIn: !!authData,
+      error: '',
+      msg: ''
     }
   }
 
@@ -38,18 +40,89 @@ class Home extends React.Component {
     window.location = '/'
   }
 
+  handlePasswordChange = (e) => {
+    e.preventDefault()
+    ref.changePassword({
+      email       : authData.password.email,
+      oldPassword : this.refs.oldpassword.value,
+      newPassword : this.refs.newpassword.value
+    }, (error) => {
+      if (error === null) {
+        ref.unauth()
+        alert("Password changed successfully, please log in again.")
+        location.href = "/"
+      } else {
+        this.setState({
+          message: "Error changing password"
+        })
+      }
+    });
+  }
+
+  handleTeamNameChange = () => {
+    console.log('team name change');
+  }
+
   render() {
+
+    let needTeamName = (
+      <div className="col-md-12">
+        <div className="alert alert-warning" role="alert">
+          <form onSubmit={this.handleTeamNameChange}>
+            <label>Change Team Name</label>
+            <div className="form-group">
+              <input className="form-control" type="text" placeholder="Please select a team name" ref="teamName" />
+            </div>
+            <button type="submit" className="btn btn-primary">Submit Team Name</button>
+          </form>
+        </div>
+      </div>
+    )
+
+    let needPassword  = (authData && (authData.password).hasOwnProperty('isTemporaryPassword') && authData.password.isTemporaryPassword) ? (
+      (
+        <div className="container col-md-12">
+          <div className="alert alert-danger" role="alert">
+            <form onSubmit={this.handlePasswordChange}>
+              <label>Change Temporary Password</label>
+              <div className="form-group">
+                <input className="form-control" type="password" placeholder="Old password" ref="oldpassword" />
+              </div>
+              <div className="form-group">
+                <input className="form-control" type="password" placeholder="New password" ref="newpassword" />
+              </div>
+              <button type="submit" className="btn btn-primary">Change Password</button>
+            </form>
+          </div>
+        </div>
+      )
+    ) : ''
+
     return (
       <div className="jumbotron">
         <div className="container">
           <h1>Fantasy Gawlf</h1>
           {
+            (this.state.error)
+            ? (
+              <div className="alert alert-danger" role="alert">{this.state.error}</div>
+            ) : ''
+          }
+          {
+            (this.state.msg)
+            ? (
+              <div className="alert alert-success" role="alert">{this.state.msg}</div>
+            ) : ''
+          }
+          {
             (this.state.loggedIn)
               ? (
                 <div>
-                  <div className="col-md-12">
+                  <div style={{marginBottom: '10px'}} className="col-md-12">
                     Welcome! (<a href="#" onClick={this.logout}>Logout</a>)
                   </div>
+                  {needPassword}
+                  {needTeamName}
                   <div className="col-md-3">
                     <MakePick />
                   </div>
@@ -74,7 +147,7 @@ class Home extends React.Component {
                   </div>
                 </div>
               )
-          }
+            }
         </div>
       </div>
     )
