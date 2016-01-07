@@ -110,7 +110,14 @@ class MakePick extends React.Component {
         }
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
-            <input type="text" placeholder="Player" className="form-control" ref="playerName" />
+            <select className="form-control" ref="playerName">
+              <option value="">Select Player..</option>
+              {
+                (this.props.players).map((player) => {
+                  return <option key={Math.random()} value={player}>{player}</option>
+                })
+              }
+            </select>
           </div>
           <div className="form-group">
             <select className="form-control" ref="tournamentSelect">
