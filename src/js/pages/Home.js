@@ -22,24 +22,25 @@ class Home extends React.Component {
       loggedIn: !!authData,
       error: '',
       msg: '',
-      teamName: ''
+      teamName: null
     }
-
-    this.getTeamName()
+    
+    if (authData && authData.uid) {
+      this.getTeamName()
+    }
   }
 
   getTeamName = () => {
     ref.child('teams').child(authData.uid).on("value", (snapshot) => {
-      let teams = snapshot.val()
-
-      if (teams) {
-        for (let team in teams) {
-          if (teams.hasOwnProperty(team) && teams[team].hasOwnProperty('name')) {
-            this.setState({
-              teamName: teams[team].name
-            })
-          }
-        }
+      let team = snapshot.val()
+      if (team) {
+        this.setState({
+          teamName: team.name
+        })
+      } else {
+        this.setState({
+          teamName: ''
+        })
       }
     })
   }
@@ -89,24 +90,30 @@ class Home extends React.Component {
       return
     }
 
-    let obj = {}
-    obj.name = this.refs.teamName.value;
+    let teamName = this.refs.teamName.value
 
-    let team = ref.child("teams").child(authData.uid).push(obj)
-    if (team.key()) {
-      this.setState({
-        msg: "Team name saved."
+    let obj = {}
+    obj.name = teamName
+
+    ref.child("teams")
+      .child(authData.uid)
+      .set(obj, (error) => {
+        if (error) {
+          this.setState({
+            error: "Error saving team name."
+          })
+        } else {
+          this.setState({
+            msg: "Team name saved.",
+            teamName: teamName
+          })
+        }
       })
-    } else {
-      this.setState({
-        error: "Error saving team name."
-      })
-    }
   }
 
   render() {
 
-    let needTeamName = (!this.state.teamName) ? (
+    let needTeamName = (this.state.teamName === '') ? (
       <div className="col-md-12">
         <div className="alert alert-warning" role="alert">
           <form onSubmit={this.handleTeamNameChange}>
@@ -139,8 +146,6 @@ class Home extends React.Component {
       )
     ) : ''
 
-    let welcome = (this.state.teamName) ? 'Welcome ' + this.state.teamName + '!' : 'Welcome!'
-
     return (
       <div className="jumbotron">
         <div className="container">
@@ -162,7 +167,7 @@ class Home extends React.Component {
               ? (
                 <div>
                   <div style={{marginBottom: '10px'}} className="col-md-12">
-                    {welcome} (<a href="#" onClick={this.logout}>Logout</a>)
+                    Welcome! (<a href="#" onClick={this.logout}>Logout</a>)
                   </div>
                   {needPassword}
                   {needTeamName}

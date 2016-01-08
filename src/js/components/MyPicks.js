@@ -49,7 +49,7 @@ class MyPicks extends React.Component {
             (this.state.picks).map((pick) => {
               return (
                 <tr key={Math.random()}>
-                  <td>{pick.player}</td>
+                  <td><strong>{pick.player}</strong></td>
                   <td>{pick.course}</td>
                 </tr>
               )

@@ -3,14 +3,46 @@ import moment from 'moment'
 
 import TournamentList from '../../components/TournamentList'
 
+const ref = new Firebase("https://fantasygawlf.firebaseio.com");
+
 class AddTournament extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
       error: '',
-      msg: ''
+      msg: '',
+      tournaments: {}
     }
+
+    this.getTournaments()
+  }
+
+  getTournaments = () => {
+    // Attach an asynchronous callback to read the data at our posts reference
+    ref.child('tournaments').orderByChild("startDate").on("value", (snapshot) => {
+
+      let quarterObj = {},
+        tournamentYear = snapshot.val()
+
+      for (let quarter in tournamentYear) {
+        if (tournamentYear.hasOwnProperty(quarter)) {
+          let tournaments = tournamentYear[quarter],
+            tournamentArr = []
+          for (let tournament in tournaments) {
+            if (tournaments.hasOwnProperty(tournament)) {
+              tournamentArr.push(tournaments[tournament])
+            }
+          }
+          quarterObj[quarter] = tournamentArr
+        }
+      }
+
+      this.setState({
+        tournaments: quarterObj
+      })
+    })
   }
 
   validate = () => {
@@ -74,8 +106,7 @@ class AddTournament extends React.Component {
       obj.startDate = moment(this.refs.startDate.value, "MM/DD/YYYY").unix()
       obj.endDate = moment(this.refs.endDate.value, "MM/DD/YYYY").unix()
 
-      var ref = new Firebase("https://fantasygawlf.firebaseio.com")
-      let tournament = ref.child("tournaments").push(obj)
+      let tournament = ref.child("tournaments").child(this.refs.quarter.value).push(obj)
 
       if (tournament.key()) {
         this.setState({
@@ -96,7 +127,7 @@ class AddTournament extends React.Component {
     return (
       <div className="jumbotron">
         <div className="container">
-          <div className="col-md-8">
+          <div className="col-md-12">
             <h1>Add Tournament</h1>
             {
               (this.state.error)
@@ -123,11 +154,18 @@ class AddTournament extends React.Component {
               <div className="form-group">
                 <input type="text" className="form-control" placeholder="End Date (mm/dd/yyyy)" ref="endDate"/>
               </div>
-              <button type="submit" className="btn btn-primary btn-block">Submit</button>
+              <div className="form-group">
+                <label>Quarter</label>
+                <select className="form-control" ref="quarter">
+                  <option value="q1">1</option>
+                  <option value="q2">2</option>
+                  <option value="q3">3</option>
+                  <option value="q4">4</option>
+                  <option value="fe">FedEx Cup</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">Submit</button>
             </form>
-          </div>
-          <div className="col-md-4">
-            <TournamentList />
           </div>
         </div>
       </div>

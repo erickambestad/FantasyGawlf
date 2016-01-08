@@ -16,15 +16,15 @@ class Leaderboard extends React.Component {
           </thead>
           <tbody>
             <tr>
-              <td>Eric</td>
+              <td><strong>Eric</strong></td>
               <td>$15,000,000</td>
             </tr>
             <tr>
-              <td>John</td>
+              <td><strong>John</strong></td>
               <td>$14,000,000</td>
             </tr>
             <tr>
-              <td>Paul</td>
+              <td><strong>Paul</strong></td>
               <td>$13,900,000</td>
             </tr>
           </tbody>

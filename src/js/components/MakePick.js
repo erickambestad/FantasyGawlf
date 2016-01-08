@@ -23,12 +23,17 @@ class MakePick extends React.Component {
     // Attach an asynchronous callback to read the data at our posts reference
     let tournamentArray = []
     ref.child('tournaments').orderByChild("startDate").on("value", (snapshot) => {
-      let tournaments = snapshot.val()
-      for (let key in tournaments) {
-        if (tournaments.hasOwnProperty(key)) {
-          tournamentArray.push({key: key, val: tournaments[key]})
+      snapshot.forEach(function(data) {
+        let quarter = data.key(),
+          tournaments = data.val()
+        for (let tournament in tournaments) {
+          if (tournaments.hasOwnProperty(tournament)) {
+            let obj = tournaments[tournament]
+            obj.key = tournament
+            tournamentArray.push(obj)
+          }
         }
-      }
+      })
       this.setState({
         tournaments: tournamentArray
       })
@@ -63,11 +68,10 @@ class MakePick extends React.Component {
       let obj = {
         player: this.refs.playerName.value
       }
-
       let tourn = (this.state.tournaments).filter((tournament) => {
         return this.refs.tournamentSelect.value === tournament.key
       }).map((c) => {
-        return c.val;
+        return c;
       })[0];
 
       obj.course = tourn.courseName
@@ -124,7 +128,7 @@ class MakePick extends React.Component {
               <option value="">Select Tournament..</option>
               {
                 (this.state.tournaments).map(function(tournament) {
-                  return <option key={Math.random()} value={tournament.key}>{moment(tournament.val.startDate, 'X').format('MM/DD/YYYY') + " - " + moment(tournament.val.endDate, 'X').format('MM/DD/YYYY') + " - " + tournament.val.courseName}</option>
+                  return <option key={Math.random()} value={tournament.key}>{moment(tournament.startDate, 'X').format('MM/DD/YYYY') + " - " + moment(tournament.endDate, 'X').format('MM/DD/YYYY') + " - " + tournament.courseName}</option>
                 })
               }
             </select>
