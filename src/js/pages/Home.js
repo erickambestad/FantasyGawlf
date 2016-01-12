@@ -154,7 +154,8 @@ class Home extends React.Component {
     return (
       <div className="jumbotron">
         <div className="container">
-          <h1>Fantasy Gawlf</h1>
+          <h1>Fantasy Gawlf <h6>(Cause better names were taken.)</h6></h1>
+          <hr />
           {
             (this.state.error)
             ? (
@@ -172,7 +173,7 @@ class Home extends React.Component {
               ? (
                 <div>
                   <div style={{marginBottom: '10px'}} className="col-md-12">
-                    Welcome {this.state.teamName} (<a href="#" onClick={this.logout}>Logout</a>)
+                    <strong>Welcome {this.state.teamName}</strong> (<a href="#" onClick={this.logout}>Logout</a>)
                   </div>
                   <div className="col-md-12">
                     {needPassword}
@@ -207,16 +208,14 @@ class Home extends React.Component {
                       <div>
                         <h3>How does it work?</h3>
                         <ul>
-                          <li>The 2016 PGA Tour season is split in to quarters starting with the Farmer’s Insurance Open</li>
-                          <li>Each quarter will be it’s own season with winnings available to the top finishers</li>
-                          <li>At the end of each quarter the top 2 players with the highest quarter totals win the quarter’s earnings</li>
-                          <li>Each quarter winner gets automatically entered in the Championship, one tournament playoff for chance at the biggest prize</li>
-                          <li>The Championship will be a one pick, winner take all tournament with the biggest prize.</li>
+                          <li>Select one golfer each week....each golfer can only be used once during the season and cannot be re-used if they miss the cut the first time you chose them</li>
+                          <li>Dollars earned by your player each week is our points system--if they miss the cut, you earn $0 that week.  So bigger purse tournaments are more important than smaller ones</li>
+                          <li>The 2016 PGA Tour is split in to quarters and the winner from each quarter will face off in the final Tour Championship tournament. (Top players in each quarter will win prize money with the championship being the biggest pot)</li>
                         </ul>
                       </div>
                       <div>
                         <h3>How do I play?</h3>
-                        <p>Pick one player each tournament.. that’s it.  The only catch is that it has to be somebody you haven’t already picked.  Have fun! (and try not to rip your hair out)</p>
+                        <p>Pick one player each tournament.. that’s it. Have fun! (and try not to rip your hair out)</p>
                       </div>
                     </div>
                   </div>
