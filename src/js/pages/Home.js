@@ -149,7 +149,7 @@ class Home extends React.Component {
     ) : ''
 
     let needsPayment = (this.state.paid === false)
-      ? <div className="alert alert-warning" role="alert" dangerouslySetInnerHTML={{__html: "Unpaid. <a href='https://www.paypal.me/erickambestad'>https://www.paypal.me/erickambestad</a> to pay with Paypal or email <a href='mailto:erickambestad@yahoo.com'>erickambestad@yahoo.com</a> for other methods."}}></div> : ''
+      ? <div className="alert alert-warning" role="alert" dangerouslySetInnerHTML={{__html: "Unpaid. <a href='https://www.paypal.me/erickambestad' target='_blank'>https://www.paypal.me/erickambestad</a> to pay with Paypal or email <a href='mailto:erickambestad@yahoo.com'>erickambestad@yahoo.com</a> for other methods. If you have recently paid, please allow 24 hours for the website to update."}}></div> : ''
 
     return (
       <div className="jumbotron">
