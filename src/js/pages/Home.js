@@ -155,7 +155,6 @@ class Home extends React.Component {
       <div className="jumbotron">
         <div className="container">
           <h1>Fantasy Gawlf <h6>(Cause better names were taken.)</h6></h1>
-          <hr />
           {
             (this.state.error)
             ? (
