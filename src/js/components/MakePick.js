@@ -12,30 +12,47 @@ class MakePick extends React.Component {
 
     this.state = {
       tournaments: [],
+      picks: [],
       error: '',
       msg: ''
     }
 
     this.getTournaments()
+
+    this.getPicks()
   }
 
   getTournaments = () => {
     // Attach an asynchronous callback to read the data at our posts reference
     let tournamentArray = []
     ref.child('tournaments').orderByChild("startDate").on("value", (snapshot) => {
-      snapshot.forEach(function(data) {
+      snapshot.forEach((data) => {
         let quarter = data.key(),
           tournaments = data.val()
         for (let tournament in tournaments) {
           if (tournaments.hasOwnProperty(tournament)) {
             let obj = tournaments[tournament]
             obj.key = tournament
+            obj.quarter = quarter
             tournamentArray.push(obj)
           }
         }
       })
       this.setState({
         tournaments: tournamentArray
+      })
+    })
+  }
+
+  getPicks = () => {
+    ref.child('picks').child(authData.uid).on("value", (snapshot) => {
+      let picks = []
+      snapshot.forEach((data) => {
+        let pick = data.val()
+        picks.push(pick.player)
+      })
+      this.setState({
+        picks: picks
       })
     })
   }
@@ -73,9 +90,10 @@ class MakePick extends React.Component {
       }).map((c) => {
         return c;
       })[0];
-
       obj.course = tourn.courseName
       obj.startDate = tourn.startDate
+      obj.endDate = tourn.endDate
+      obj.result = false
 
       let pick = ref.child("picks")
         .child(authData.uid)
@@ -96,6 +114,13 @@ class MakePick extends React.Component {
     }
   }
 
+  closeAlert = () => {
+    this.setState({
+      error: '',
+      msg: ''
+    })
+  }
+
   render() {
     return (
       <div>
@@ -103,32 +128,41 @@ class MakePick extends React.Component {
         {
           (this.state.error)
           ? (
-            <div className="alert alert-danger" role="alert">{this.state.error}</div>
+            <div className="alert alert-danger" role="alert" onClick={this.closeAlert}>{this.state.error}</div>
           ) : ''
         }
         {
           (this.state.msg)
           ? (
-            <div className="alert alert-success" role="alert">{this.state.msg}</div>
+            <div className="alert alert-success" role="alert" onClick={this.closeAlert}>{this.state.msg}</div>
           ) : ''
         }
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <select className="form-control" ref="playerName">
-              <option value="">Select Player..</option>
+              <option value="">Available Players..</option>
               {
-                (this.props.players).map((player) => {
-                  return <option key={Math.random()} value={player}>{player}</option>
+                (this.props.players)
+                .map((player) => {
+                  let disabled = (this.state.picks).indexOf(player) !== -1
+                  return <option key={Math.random()} value={player} disabled={(disabled ? 'disabled' : '')}>{player + (disabled ? ' (Already Picked)' : '')}</option>
                 })
               }
             </select>
           </div>
           <div className="form-group">
             <select className="form-control" ref="tournamentSelect">
-              <option value="">Select Tournament..</option>
+              <option value="">Upcoming Tournaments..</option>
               {
-                (this.state.tournaments).map(function(tournament) {
-                  return <option key={Math.random()} value={tournament.key}>{moment(tournament.startDate, 'X').format('MM/DD/YYYY') + " - " + moment(tournament.endDate, 'X').format('MM/DD/YYYY') + " - " + tournament.courseName}</option>
+                (this.state.tournaments)
+                .filter((tournament) => {
+                  return moment().unix() < tournament.startDate
+                })
+                .sort((a, b) => {
+                  return a.startDate - b.startDate
+                })
+                .map((tournament) => {
+                  return <option key={Math.random()} value={tournament.key}>{moment(tournament.startDate, 'X').format('MM/DD/YYYY') + " - " + moment(tournament.endDate, 'X').format('MM/DD/YYYY') + " - " + tournament.courseName + ' (' + (tournament.quarter).toUpperCase() + ')'}</option>
                 })
               }
             </select>

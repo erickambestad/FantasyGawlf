@@ -16,10 +16,17 @@ class Register extends React.Component {
   }
 
   validate = () => {
-    let email = this.refs.emailAddress.value,
+    let team = this.refs.teamName.value,
+        email = this.refs.emailAddress.value,
         password = this.refs.password.value,
         confirm = this.refs.confirmPassword.value;
 
+    if (team === "") {
+      this.setState({
+        error: "You must enter a team name"
+      })
+      return false
+    }
     if (email === "") {
       this.setState({
         error: "You must enter an email address"
@@ -71,13 +78,26 @@ class Register extends React.Component {
           ref.authWithPassword({
             email : this.refs.emailAddress.value,
             password : this.refs.password.value
-          }, function(error, authData) {
+          }, (error, authData) => {
             if (error) {
               this.setState({
                 error: "Login Failed! Please try again."
               })
             } else {
-              location.href = '/'
+              ref.child("users").child(authData.uid).set({
+                email: this.refs.emailAddress.value,
+                team: this.refs.teamName.value,
+                paid: false,
+                finalist: false
+              }, (error) => {
+                if (error) {
+                  this.setState({
+                    error: "Error saving the user."
+                  })
+                } else {
+                  location.href = '/'
+                }
+              })
             }
           })
         }
@@ -102,6 +122,9 @@ class Register extends React.Component {
           ) : ''
         }
         <form onSubmit={this.register}>
+          <div className="form-group">
+            <input type="text" className="form-control" placeholder="Team Name" ref="teamName"/>
+          </div>
           <div className="form-group">
             <input type="text" className="form-control" placeholder="Email Address" ref="emailAddress"/>
           </div>

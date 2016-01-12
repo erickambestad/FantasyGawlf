@@ -161,7 +161,7 @@ class AddTournament extends React.Component {
                   <option value="q2">2</option>
                   <option value="q3">3</option>
                   <option value="q4">4</option>
-                  <option value="fe">FedEx Cup</option>
+                  <option value="tc">Tournament Championship</option>
                 </select>
               </div>
               <button type="submit" className="btn btn-primary">Submit</button>

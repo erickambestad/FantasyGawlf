@@ -22,20 +22,22 @@ class Home extends React.Component {
       loggedIn: !!authData,
       error: '',
       msg: '',
-      teamName: null
+      teamName: null,
+      paid: null
     }
-    
+
     if (authData && authData.uid) {
       this.getTeamName()
     }
   }
 
   getTeamName = () => {
-    ref.child('teams').child(authData.uid).on("value", (snapshot) => {
-      let team = snapshot.val()
-      if (team) {
+    ref.child('users').child(authData.uid).on("value", (snapshot) => {
+      let user = snapshot.val()
+      if (user) {
         this.setState({
-          teamName: team.name
+          teamName: user.team,
+          paid: user.paid
         })
       } else {
         this.setState({
@@ -80,52 +82,52 @@ class Home extends React.Component {
     });
   }
 
-  handleTeamNameChange = (e) => {
-    e.preventDefault()
-
-    if (this.refs.teamName.value === "") {
-      this.setState({
-        error: "Error saving team name."
-      })
-      return
-    }
-
-    let teamName = this.refs.teamName.value
-
-    let obj = {}
-    obj.name = teamName
-
-    ref.child("teams")
-      .child(authData.uid)
-      .set(obj, (error) => {
-        if (error) {
-          this.setState({
-            error: "Error saving team name."
-          })
-        } else {
-          this.setState({
-            msg: "Team name saved.",
-            teamName: teamName
-          })
-        }
-      })
-  }
+  // handleTeamNameChange = (e) => {
+  //   e.preventDefault()
+  //
+  //   if (this.refs.teamName.value === "") {
+  //     this.setState({
+  //       error: "Error saving team name."
+  //     })
+  //     return
+  //   }
+  //
+  //   let teamName = this.refs.teamName.value
+  //
+  //   let obj = {}
+  //   obj.name = teamName
+  //
+  //   ref.child("teams")
+  //     .child(authData.uid)
+  //     .set(obj, (error) => {
+  //       if (error) {
+  //         this.setState({
+  //           error: "Error saving team name."
+  //         })
+  //       } else {
+  //         this.setState({
+  //           msg: "Team name saved.",
+  //           teamName: teamName
+  //         })
+  //       }
+  //     })
+  // }
 
   render() {
 
-    let needTeamName = (this.state.teamName === '') ? (
-      <div className="col-md-12">
-        <div className="alert alert-warning" role="alert">
-          <form onSubmit={this.handleTeamNameChange}>
-            <label>Change Team Name</label>
-            <div className="form-group">
-              <input className="form-control" type="text" placeholder="Please select a team name" ref="teamName" />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit Team Name</button>
-          </form>
-        </div>
-      </div>
-    ) : ''
+    // let needTeamName = (this.state.teamName === '') ? (
+    //   <div className="col-md-12">
+    //     <div className="alert alert-warning" role="alert">
+    //       <form onSubmit={this.handleTeamNameChange}>
+    //         <label>Change Team Name</label>
+    //         <div className="form-group">
+    //           <input className="form-control" type="text" placeholder="Please select a team name" ref="teamName" />
+    //         </div>
+    //         <button type="submit" className="btn btn-primary">Submit Team Name</button>
+    //       </form>
+    //     </div>
+    //   </div>
+    // ) : ''
 
     let needPassword = (authData && (authData.password).hasOwnProperty('isTemporaryPassword') && authData.password.isTemporaryPassword) ? (
       (
@@ -145,6 +147,9 @@ class Home extends React.Component {
         </div>
       )
     ) : ''
+
+    let needsPayment = (this.state.paid === false)
+      ? <div className="alert alert-warning" role="alert" dangerouslySetInnerHTML={{__html: "Unpaid. <a href='https://www.paypal.me/erickambestad'>https://www.paypal.me/erickambestad</a> to pay with Paypal or email <a href='mailto:erickambestad@yahoo.com'>erickambestad@yahoo.com</a> for other methods."}}></div> : ''
 
     return (
       <div className="jumbotron">
@@ -167,17 +172,29 @@ class Home extends React.Component {
               ? (
                 <div>
                   <div style={{marginBottom: '10px'}} className="col-md-12">
-                    Welcome! (<a href="#" onClick={this.logout}>Logout</a>)
+                    Welcome {this.state.teamName} (<a href="#" onClick={this.logout}>Logout</a>)
                   </div>
-                  {needPassword}
-                  {needTeamName}
+                  <div className="col-md-12">
+                    {needPassword}
+                    {needsPayment}
+                  </div>
+                  <div className="col-md-12">
+                    <h3><strong>Schedule</strong></h3>
+                    <ul style={{listStyle: 'none', paddingLeft: '0'}}>
+                      <li><strong>Quarter 1:</strong> Farmer's Insurance Open (1/28/16) - World Golf Championships-Dell Match Play (3/27/2016)</li>
+                      <li><strong>Quarter 2:</strong> Shell Houston Open (3/31/16) - Colonial National Invitation Tournament (5/29/2016)</li>
+                      <li><strong>Quarter 3:</strong> the Memorial Tournament presented by Nationwide (6/2/16) - RBC Canadian Open (7/24/2016)</li>
+                      <li><strong>Quarter 4:</strong> PGA Championship (7/28/16) - BMW Championship  (9/11/2016)</li>
+                      <li><strong>Championship:</strong> TOUR Championship by Coca-Cola (9/22/2016 - 9/25/2016)</li>
+                    </ul>
+                  </div>
                   <div className="col-md-3">
                     <MakePick players={data.players} />
                   </div>
-                  <div className="col-md-5">
+                  <div className="col-md-6">
                     <MyPicks />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <Leaderboard />
                   </div>
                 </div>
@@ -185,6 +202,24 @@ class Home extends React.Component {
               //: <a href="#" className="btn btn-primary" onClick={this.login}>Login</a>
               : (
                 <div>
+                  <div className="col-md-12">
+                    <div className="jumbotron">
+                      <div>
+                        <h3>How does it work?</h3>
+                        <ul>
+                          <li>The 2016 PGA Tour season is split in to quarters starting with the Farmer’s Insurance Open</li>
+                          <li>Each quarter will be it’s own season with winnings available to the top finishers</li>
+                          <li>At the end of each quarter the top 2 players with the highest quarter totals win the quarter’s earnings</li>
+                          <li>Each quarter winner gets automatically entered in the Championship, one tournament playoff for chance at the biggest prize</li>
+                          <li>The Championship will be a one pick, winner take all tournament with the biggest prize.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3>How do I play?</h3>
+                        <p>Pick one player each tournament.. that’s it.  The only catch is that it has to be somebody you haven’t already picked.  Have fun! (and try not to rip your hair out)</p>
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-md-12">
                     <div className="col-md-6">
                       <Login />

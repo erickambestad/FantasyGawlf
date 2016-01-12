@@ -5,6 +5,7 @@ import { render } from 'react-dom'
 import Home from './js/pages/Home'
 import AddTournament from './js/pages/Tournaments/Add'
 import Password from './js/pages/Password'
+import Picks from './js/pages/Picks'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -21,6 +22,7 @@ render((
   <Router>
     <Route path="/" component={Home} />
     <Route path="/tournament/add" component={AddTournament} onEnter={requireAuth} />
+    <Route path="/picks" component={Picks} onEnter={requireAuth} />
     <Route path="/password" component={Password} />
   </Router>
 ), document.getElementById('content'))
