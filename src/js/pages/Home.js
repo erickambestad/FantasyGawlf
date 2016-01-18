@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 import moment from 'moment'
 
 import data from '../data.js'
@@ -26,7 +27,9 @@ class Home extends React.Component {
       teamName: null,
       paid: null
     }
+  }
 
+  componentWillMount() {
     if (authData && authData.uid) {
       this.getTeamName()
     }
@@ -175,7 +178,8 @@ class Home extends React.Component {
               ? (
                 <div>
                   <div style={{marginBottom: '10px'}} className="col-md-12">
-                    <strong>Welcome {this.state.teamName}</strong> (<a href="#" onClick={this.logout}>Logout</a>)
+                    <strong>Welcome {this.state.teamName}</strong> (<a href="#" onClick={this.logout}>Logout</a>)<br />
+                    <Link to={'/rules'}>View rules and payouts</Link>
                   </div>
                   <div className="col-md-12">
                     {needPassword}

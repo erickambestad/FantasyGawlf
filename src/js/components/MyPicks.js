@@ -12,7 +12,9 @@ class MyPicks extends React.Component {
     this.state = {
       picks: []
     }
+  }
 
+  componentDidMount() {
     this.loadPicks()
   }
 

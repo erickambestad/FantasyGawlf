@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router'
 
 class Rules extends React.Component {
 
@@ -7,7 +8,7 @@ class Rules extends React.Component {
       <div className="jumbotron">
         <div className="container">
           <h1>Rules & Payouts</h1>
-          <a href="/">Back Home</a>
+          <Link to={'/'}>Back Home</Link>
           <div className="col-md-12">
             <h2>Rules</h2>
             <ul>
