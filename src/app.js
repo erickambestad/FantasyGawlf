@@ -6,6 +6,7 @@ import Home from './js/pages/Home'
 import AddTournament from './js/pages/Tournaments/Add'
 import Password from './js/pages/Password'
 import Picks from './js/pages/Picks'
+import Rules from './js/pages/Rules'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -24,5 +25,6 @@ render((
     <Route path="/tournament/add" component={AddTournament} onEnter={requireAuth} />
     <Route path="/picks" component={Picks} onEnter={requireAuth} />
     <Route path="/password" component={Password} />
+    <Route path="/rules" component={Rules} />
   </Router>
 ), document.getElementById('content'))
