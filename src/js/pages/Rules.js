@@ -38,7 +38,6 @@ class Rules extends React.Component {
             </ul>
 
             <h2>Payouts</h2>
-            <hr />
             <h4>Base on a $1400 total pot (14 entries)</h4>
             <ul>
               <li>Each Quarter Payout: <br />
