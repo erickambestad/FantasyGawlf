@@ -2,6 +2,10 @@ import React from 'react';
 
 class Leaderboard extends React.Component {
 
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div>
@@ -14,9 +18,16 @@ class Leaderboard extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td colSpan="2">Leaderboard will be updated after the first tournament.</td>
-            </tr>
+            {
+              Object.keys(this.props.users).map((team) => {
+                return (
+                  <tr key={Math.random()}>
+                    <td>{this.props.users[team]}</td>
+                    <td>$0</td>
+                  </tr>
+                )
+              })
+            }
           </tbody>
         </table>
       </div>

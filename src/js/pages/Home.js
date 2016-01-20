@@ -9,6 +9,7 @@ import Leaderboard from '../components/Leaderboard'
 import MyPicks from '../components/MyPicks'
 import Login from '../components/Login'
 import Register from '../components/Register'
+import WeekPicks from '../components/WeekPicks'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -22,6 +23,7 @@ class Home extends React.Component {
 
     this.state = {
       loggedIn: !!authData,
+      users: [],
       error: '',
       msg: '',
       teamName: null,
@@ -32,7 +34,26 @@ class Home extends React.Component {
   componentWillMount() {
     if (authData && authData.uid) {
       this.getTeamName()
+      this.getUsers()
     }
+  }
+
+  getUsers = () => {
+    let usersList = {}
+    ref.child('users').on("value", (snapshot) => {
+      let users = snapshot.val()
+      for (let user in users) {
+        if (users.hasOwnProperty(user)) {
+          let userObj = users[user]
+          usersList[user] = userObj.team
+        }
+      }
+      this.setState({
+        users: usersList
+      })
+    }, (error) => {
+      console.log(error,' error')
+    })
   }
 
   getTeamName = () => {
@@ -86,52 +107,7 @@ class Home extends React.Component {
     });
   }
 
-  // handleTeamNameChange = (e) => {
-  //   e.preventDefault()
-  //
-  //   if (this.refs.teamName.value === "") {
-  //     this.setState({
-  //       error: "Error saving team name."
-  //     })
-  //     return
-  //   }
-  //
-  //   let teamName = this.refs.teamName.value
-  //
-  //   let obj = {}
-  //   obj.name = teamName
-  //
-  //   ref.child("teams")
-  //     .child(authData.uid)
-  //     .set(obj, (error) => {
-  //       if (error) {
-  //         this.setState({
-  //           error: "Error saving team name."
-  //         })
-  //       } else {
-  //         this.setState({
-  //           msg: "Team name saved.",
-  //           teamName: teamName
-  //         })
-  //       }
-  //     })
-  // }
-
   render() {
-
-    // let needTeamName = (this.state.teamName === '') ? (
-    //   <div className="col-md-12">
-    //     <div className="alert alert-warning" role="alert">
-    //       <form onSubmit={this.handleTeamNameChange}>
-    //         <label>Change Team Name</label>
-    //         <div className="form-group">
-    //           <input className="form-control" type="text" placeholder="Please select a team name" ref="teamName" />
-    //         </div>
-    //         <button type="submit" className="btn btn-primary">Submit Team Name</button>
-    //       </form>
-    //     </div>
-    //   </div>
-    // ) : ''
 
     let needPassword = (authData && (authData.password).hasOwnProperty('isTemporaryPassword') && authData.password.isTemporaryPassword) ? (
       (
@@ -199,10 +175,11 @@ class Home extends React.Component {
                     <MakePick players={data.players} />
                   </div>
                   <div className="col-md-6">
+                    <WeekPicks users={this.state.users} />
                     <MyPicks />
                   </div>
                   <div className="col-md-3">
-                    <Leaderboard />
+                    <Leaderboard users={this.state.users} />
                   </div>
                   <div className="col-md-12">
                     <hr />
