@@ -135,7 +135,7 @@ class Home extends React.Component {
       <div className="jumbotron">
         <div className="container">
           <h1>Fantasy Gawlf</h1>
-          <h6>(Cause better names were taken.)</h6>
+          <h6 style={{paddingLeft: '5px'}}>(Cause better names were taken.)</h6>
           <hr />
           {
             (this.state.error)
@@ -154,8 +154,7 @@ class Home extends React.Component {
               ? (
                 <div>
                   <div style={{marginBottom: '10px'}} className="col-md-12">
-                    <strong>Welcome {this.state.teamName}</strong> (<a href="#" onClick={this.logout}>Logout</a>)<br />
-                    <Link to={'/rules'}>View rules and payouts</Link>
+                    <strong>Welcome {this.state.teamName}</strong> (<a href="#" onClick={this.logout}>Logout</a>)
                   </div>
                   <div className="col-md-12">
                     {needPassword}
@@ -170,6 +169,10 @@ class Home extends React.Component {
                       <li><strong>Quarter 4:</strong> The Greenbrier Classic (7/7/16) - Wyndham Championship (8/21/2016)</li>
                       <li><strong>Championship:</strong> The Barclays (8/25/2016) - TOUR Championship by Coca-Cola (9/25/2016)</li>
                     </ul>
+                    <Link to={'/rules'}>View rules and payouts</Link>
+                  </div>
+                  <div className="col-md-12">
+                    <hr />
                   </div>
                   <div className="col-md-3">
                     <MakePick players={data.players} />
@@ -183,10 +186,6 @@ class Home extends React.Component {
                   </div>
                   <div className="col-md-12">
                     <hr />
-                  </div>
-                  <div className="col-md-12" style={{textAlign: 'center'}}>
-                    <h2>Your winnings: <span style={{color:'green',fontWeight:'bold'}}>$0</span></h2>
-                    <h6>As of {moment().format('MMMM Do YYYY')}</h6>
                   </div>
                 </div>
               )

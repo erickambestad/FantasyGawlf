@@ -9,7 +9,7 @@ class Leaderboard extends React.Component {
   render() {
     return (
       <div>
-        <h2>Leaders</h2>
+        <h2>Leaderboard</h2>
         <table className="table">
           <thead>
             <tr>

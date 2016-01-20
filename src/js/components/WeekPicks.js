@@ -81,7 +81,7 @@ class WeekPicks extends React.Component {
           </thead>
           <tbody>
             {
-              (this.state.picks && (this.state.tournament.startDate > moment().unix()))
+              (this.state.picks && (this.state.tournament.startDate < moment().unix()))
                 ? (
                   (this.state.picks).map((pick) => {
                     return (
@@ -92,7 +92,7 @@ class WeekPicks extends React.Component {
                     )
                   })
                 )
-                : <tr><td colSpan="2">Not available yet.</td></tr>
+                : <tr><td colSpan="2" style={{textAlign: 'center', color: 'green'}}>Available {moment((this.state.tournament).startDate, 'X').format('MM/DD/YYYY')}</td></tr>
             }
           </tbody>
         </table>
