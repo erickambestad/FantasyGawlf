@@ -11,12 +11,32 @@ class Picks extends React.Component {
     super(props)
 
     this.state = {
-      picks: []
+      picks: [],
+      users: {}
     }
   }
 
   componentDidMount() {
     this.loadPicks()
+    this.getUsers()
+  }
+
+  getUsers = () => {
+    let usersList = {}
+    ref.child('users').once("value", (snapshot) => {
+      let users = snapshot.val()
+      for (let user in users) {
+        if (users.hasOwnProperty(user)) {
+          let userObj = users[user]
+          usersList[user] = userObj.team
+        }
+      }
+      this.setState({
+        users: usersList
+      })
+    }, (error) => {
+      console.log(error,' error')
+    })
   }
 
   loadPicks() {
@@ -41,6 +61,33 @@ class Picks extends React.Component {
         })
       })
     })
+  }
+
+  updateLeaderboard = () => {
+    let leaderboard = {}
+    ref.child('picks').once("value", (snapshot) => {
+      let users = snapshot.val()
+      for (let user in users) {
+        let team = users[user].team
+        leaderboard[this.state.users[user]] = 0;
+        let userPicks = users[user]
+        for (let pick in userPicks) {
+          let pickObj = userPicks[pick]
+          if (pickObj.result === false) {
+            leaderboard[this.state.users[user]] += 0
+          } else {
+            leaderboard[this.state.users[user]] += parseInt(pickObj.result)
+          }
+        }
+      }
+    })
+    setTimeout(() => {
+      ref.child('leaderboard').set(leaderboard, (error) => {
+        if (!error) {
+          alert('leaderboard updated!')
+        }
+      })
+    }, 1000)
   }
 
   render() {
@@ -71,7 +118,7 @@ class Picks extends React.Component {
               }
           </div>
           <div className="col-md-12" style={{marginTop: '20px'}}>
-            <button className="btn btn-success btn-block btn-lg">Update Leaderboard</button>
+            <button className="btn btn-success btn-block btn-lg" onClick={this.updateLeaderboard}>Update Leaderboard</button>
           </div>
         </div>
       </div>

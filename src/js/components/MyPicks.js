@@ -22,7 +22,7 @@ class MyPicks extends React.Component {
     ref.child('picks')
       .child(authData.uid)
       .orderByChild("startDate")
-      .on("value", (snapshot) => {
+      .once("value", (snapshot) => {
         let picksArray = []
         let picks = snapshot.val()
         for (let key in picks) {

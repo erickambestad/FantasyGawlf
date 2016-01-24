@@ -29,7 +29,7 @@ class WeekPicks extends React.Component {
     ref.child('tournaments')
       .child(this.props.quarter)
       .child(this.props.tournamentId)
-      .on("value", (snapshot) => {
+      .once("value", (snapshot) => {
         this.setState({
           tournament: snapshot.val()
         })
