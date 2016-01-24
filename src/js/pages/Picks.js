@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 import moment from 'moment'
 
 import Firebase from 'firebase'
@@ -12,7 +13,9 @@ class Picks extends React.Component {
     this.state = {
       picks: []
     }
+  }
 
+  componentDidMount() {
     this.loadPicks()
   }
 
@@ -25,20 +28,19 @@ class Picks extends React.Component {
         let userPicks = users[user]
         for (let pick in userPicks) {
           let pickObj = userPicks[pick]
-          if (pickObj.result === false && pickObj.endDate < moment().unix()) {
+          if (pickObj.result === false) {
+            pickObj.userId = user
             pickObj.pickId = pick
             picks.push(pickObj)
           }
         }
       }
       this.setState({
-        picks: picks
+        picks: picks.sort((a, b) => {
+          return a.startDate - b.startDate
+        })
       })
     })
-  }
-
-  handleSubmit(e) {
-      e.preventDefault()
   }
 
   render() {
@@ -47,30 +49,26 @@ class Picks extends React.Component {
         <div className="container">
           <h1>Picks</h1>
           <div className="col-md-12">
-            <form onSubmit={this.handleSubmit}>
               {
                 (this.state.picks).map((pick) => {
                   return (
-                    <div key={Math.random()} className="col-md-12" style={{borderBottom: '1px solid #999', margin: '5px 0', padding: '5px 0 10px'}}>
-                      <input type="hidden" value={pick.pickId} ref="pickId" />
-                      <div className="col-md-4">
-                        <h4><strong>{pick.player}</strong></h4>
+                    <form key={Math.random()} onSubmit={this.handleSubmit}>
+                      <div className="col-md-12" style={{borderBottom: '1px solid #999', margin: '5px 0', padding: '5px 0 10px'}}>
+                        <div className="col-md-4">
+                          <h4><strong>{pick.player}</strong></h4>
+                        </div>
+                        <div className="col-md-4">
+                          <div>{pick.course}</div>
+                          {moment(pick.startDate, 'X').format('MM/DD/YYYY') + ' - ' + moment(pick.endDate, 'X').format('MM/DD/YYYY')}
+                        </div>
+                        <div className="col-md-1">
+                          <Link to={'/pick/update/' +  pick.userId + '/' + pick.pickId} className="btn btn-primary">Update</Link>
+                        </div>
                       </div>
-                      <div className="col-md-4">
-                        <div>{pick.course}</div>
-                        {moment(pick.startDate, 'X').format('MM/DD/YYYY') + ' - ' + moment(pick.endDate, 'X').format('MM/DD/YYYY')}
-                      </div>
-                      <div className="col-md-3">
-                        <div><input className="form-control" type="text" placeholder="Enter Winnings" ref="winnings" /></div>
-                      </div>
-                      <div className="col-md-1">
-                        <button className="btn btn-primary">Submit</button>
-                      </div>
-                    </div>
+                    </form>
                   )
                 })
               }
-            </form>
           </div>
           <div className="col-md-12" style={{marginTop: '20px'}}>
             <button className="btn btn-success btn-block btn-lg">Update Leaderboard</button>

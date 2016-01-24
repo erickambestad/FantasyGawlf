@@ -16,8 +16,10 @@ module.exports = function(grunt) {
     },
     copy: {
       main: {
-        src: 'src/index.html',
-        dest: 'build/index.html',
+        files: [
+          {expand: false, src: ['src/index.html'], dest: 'build/index.html', filter: 'isFile'},
+          {expand: false, src: ['src/favicon.ico'], dest: 'build/favicon.ico', filter: 'isFile'}
+        ]
       },
     },
     sass: {

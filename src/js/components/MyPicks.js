@@ -61,7 +61,7 @@ class MyPicks extends React.Component {
           <tr key={Math.random()}>
             <td><strong>{pick.player}</strong></td>
             <td>{pick.course}</td>
-            <td>{(pick.result === false) ? '$0' : '$' + (pick.result).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}</td>
+            <td>{(pick.result === false) ? '$0' : '$' + (parseInt(pick.result)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}</td>
             <td style={{color: 'red', fontWeight: 'bold', cursor: 'pointer'}}>{(pick.startDate > moment().unix()) ? <span onClick={this.deletePick.bind(this, pick.id)}>X</span> : ''}</td>
           </tr>
         )
