@@ -36,6 +36,14 @@ class Rules extends React.Component {
                 </div>
               </li>
             </ul>
+            <ul>
+              <li>If you pick a player that withdraws before the tournament starts, you may re-use him in another week.</li>
+              <li>If you pick a player that withdraws after he has teed off, you may not re-use him in another week.</li>
+              <li>You can change your pick, but only up to midnight the day before the tournament starts.  Your final pick is what will be used.</li>
+              <li>In the event of a tie, we will split the money</li>
+              <li>All money will be sent back to players at the conclusion of the season.</li>
+            </ul>
+
 
             <h2>Payouts</h2>
             <h4>Base on a $1400 total pot (14 entries)</h4>
