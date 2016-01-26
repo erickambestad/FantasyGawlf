@@ -8,7 +8,7 @@ class WeekPicks extends React.Component {
 
   static defaultProps = {
     quarter: 'q1',
-    tournamentId: '-K82c_RDNRx5LuFD-Eot'
+    tournamentId: '-K82cf4jS0AWcmEMkrYd'
   }
 
   constructor(props) {
