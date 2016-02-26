@@ -12,9 +12,7 @@ class MyPicks extends React.Component {
     this.state = {
       picks: []
     }
-  }
 
-  componentDidMount() {
     this.loadPicks()
   }
 
@@ -22,7 +20,7 @@ class MyPicks extends React.Component {
     ref.child('picks')
       .child(authData.uid)
       .orderByChild("startDate")
-      .once("value", (snapshot) => {
+      .on("value", (snapshot) => {
         let picksArray = []
         let picks = snapshot.val()
         for (let key in picks) {

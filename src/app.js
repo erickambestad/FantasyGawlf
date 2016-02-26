@@ -8,6 +8,7 @@ import Password from './js/pages/Password'
 import Picks from './js/pages/Picks'
 import Rules from './js/pages/Rules'
 import Update from './js/pages/Update'
+import PickMe from './js/pages/PickMe'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -34,5 +35,6 @@ render((
     <Route path="/pick/update/:userId/:pickId" component={Update} onEnter={requireAdmin} />
     <Route path="/password" component={Password} />
     <Route path="/rules" component={Rules} />
+    <Route path="/pick-me" component={PickMe} onEnter={requireAdmin} />
   </Router>
 ), document.getElementById('content'))

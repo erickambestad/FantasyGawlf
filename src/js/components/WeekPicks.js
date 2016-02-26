@@ -8,7 +8,7 @@ class WeekPicks extends React.Component {
 
   static defaultProps = {
     quarter: 'q1',
-    tournamentId: '-K82c_RDNRx5LuFD-Eot'
+    tournamentId: '-K82d2L8Qnmd2KDT4UHR'
   }
 
   constructor(props) {
@@ -18,9 +18,7 @@ class WeekPicks extends React.Component {
       picks: [],
       tournament: {}
     }
-  }
 
-  componentDidMount() {
     this.loadPicks()
     this.loadCourse()
   }

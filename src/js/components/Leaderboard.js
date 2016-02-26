@@ -9,19 +9,26 @@ class Leaderboard extends React.Component {
     super(props)
 
     this.state = {
-      teams: {}
+      teams: []
     }
-  }
 
-  componentDidMount() {
     this.loadLeaderboard()
   }
 
   loadLeaderboard = () => {
     ref.child('leaderboard')
       .once("value", (snapshot) => {
+        let leaders = snapshot.val(),
+          leaderboardArr = []
+        for (let team in leaders) {
+          let score = leaders[team]
+          leaderboardArr.push({
+            name: team,
+            score: score
+          })
+        }
         this.setState({
-          teams: snapshot.val()
+          teams: leaderboardArr
         })
       })
   }
@@ -39,12 +46,14 @@ class Leaderboard extends React.Component {
           </thead>
           <tbody>
             {
-              Object.keys(this.state.teams).map((team) => {
+              (this.state.teams).sort((a, b) => {
+                return b.score - a.score
+              }).map((team) => {
                 return (
-                  <tr key={Math.random()}>
-                    <td>{team}</td>
+                  <tr key={team.name}>
+                    <td>{team.name}</td>
                     <td>
-                      {'$' + (parseInt(this.state.teams[team])).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+                      {'$' + (parseInt(team.score)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
                     </td>
                   </tr>
                 )

@@ -19,9 +19,7 @@ class Update extends React.Component {
       pickId: pickId,
       userId: userId
     }
-  }
 
-  componentDidMount() {
     ref.child('picks')
       .child(this.state.userId)
       .child(this.state.pickId)
@@ -57,7 +55,6 @@ class Update extends React.Component {
             <h6>{moment((this.state.pick).startDate, 'X').format('MM/DD/YYYY') + ' - ' + moment((this.state.pick).endDate, 'X').format('MM/DD/YYYY')}</h6>
           </div>
           <form onSubmit={this.handleSubmit}>
-            <input type="hidden" value={'i734hr'} />
             <div className="form-group">
               <input type="text" className="form-control" placeholder="Amount" ref="amount"/>
             </div>

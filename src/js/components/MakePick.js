@@ -16,9 +16,7 @@ class MakePick extends React.Component {
       error: '',
       msg: ''
     }
-  }
 
-  componentDidMount() {
     this.getTournaments()
     this.getPicks()
   }

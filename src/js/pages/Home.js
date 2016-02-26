@@ -14,7 +14,7 @@ import WeekPicks from '../components/WeekPicks'
 // Get the logged in user
 import Firebase from 'firebase'
 var ref = new Firebase("https://fantasygawlf.firebaseio.com")
-var authData = ref.getAuth()
+var authData;
 
 class Home extends React.Component {
 
@@ -22,17 +22,26 @@ class Home extends React.Component {
     super(props)
 
     this.state = {
-      loggedIn: !!authData,
+      loggedIn: false,
       users: [],
       error: '',
       msg: '',
       teamName: null,
       paid: null
     }
+
+
   }
 
-  componentWillMount() {
+  componentDidMount() {
+
+    authData = ref.getAuth()
+
     if (authData && authData.uid) {
+      this.setState({
+        loggedIn: true
+      })
+      
       this.getTeamName()
       this.getUsers()
     }
@@ -40,7 +49,7 @@ class Home extends React.Component {
 
   getUsers = () => {
     let usersList = {}
-    ref.child('users').on("value", (snapshot) => {
+    ref.child('users').once("value", (snapshot) => {
       let users = snapshot.val()
       for (let user in users) {
         if (users.hasOwnProperty(user)) {
@@ -57,7 +66,7 @@ class Home extends React.Component {
   }
 
   getTeamName = () => {
-    ref.child('users').child(authData.uid).on("value", (snapshot) => {
+    ref.child('users').child(authData.uid).once("value", (snapshot) => {
       let user = snapshot.val()
       if (user) {
         this.setState({
