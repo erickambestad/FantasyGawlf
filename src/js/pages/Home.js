@@ -34,14 +34,21 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-
     authData = ref.getAuth()
 
+    ref.onAuth((auth) => {
+      if (auth) {
+        this.setState({
+          loggedIn: true
+        })
+      } else {
+        this.setState({
+          loggedIn: false
+        })
+      }
+    });
+
     if (authData && authData.uid) {
-      this.setState({
-        loggedIn: true
-      })
-      
       this.getTeamName()
       this.getUsers()
     }
