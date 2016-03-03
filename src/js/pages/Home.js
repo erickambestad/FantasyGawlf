@@ -13,8 +13,8 @@ import WeekPicks from '../components/WeekPicks'
 
 // Get the logged in user
 import Firebase from 'firebase'
-var ref = new Firebase("https://fantasygawlf.firebaseio.com")
-var authData;
+let ref = new Firebase("https://fantasygawlf.firebaseio.com")
+let authData;
 
 class Home extends React.Component {
 
@@ -30,11 +30,25 @@ class Home extends React.Component {
       paid: null
     }
 
+
+
   }
 
   componentDidMount() {
-
     authData = ref.getAuth()
+
+    // Register auth callbacks
+    ref.onAuth((auth) => {
+      if (auth) {
+        this.setState({
+          loggedIn: true
+        })
+      } else {
+        this.setState({
+          loggedIn: false
+        })
+      }
+    });
 
     if (authData && authData.uid) {
       this.setState({
@@ -43,6 +57,10 @@ class Home extends React.Component {
 
       this.getTeamName()
       this.getUsers()
+    } else {
+      this.setState({
+        loggedIn: false
+      })
     }
   }
 

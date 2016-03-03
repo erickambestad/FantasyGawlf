@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 const ref = new Firebase("https://fantasygawlf.firebaseio.com")
-const authData = ref.getAuth()
+let authData;
 
 class MyPicks extends React.Component {
 
@@ -12,6 +12,10 @@ class MyPicks extends React.Component {
     this.state = {
       picks: []
     }
+  }
+
+  componentDidMount() {
+    authData = ref.getAuth()
 
     this.loadPicks()
   }

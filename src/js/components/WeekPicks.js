@@ -2,14 +2,9 @@ import React from 'react'
 import moment from 'moment'
 
 const ref = new Firebase("https://fantasygawlf.firebaseio.com")
-const authData = ref.getAuth()
+let authData;
 
 class WeekPicks extends React.Component {
-
-  static defaultProps = {
-    quarter: 'q1',
-    tournamentId: '-K82d2L8Qnmd2KDT4UHR'
-  }
 
   constructor(props) {
     super(props)
@@ -18,20 +13,43 @@ class WeekPicks extends React.Component {
       picks: [],
       tournament: {}
     }
+  }
+
+  componentDidMount() {
+    authData = ref.getAuth()
 
     this.loadPicks()
     this.loadCourse()
   }
 
   loadCourse = () => {
+    let tournament;
     ref.child('tournaments')
-      .child(this.props.quarter)
-      .child(this.props.tournamentId)
       .once("value", (snapshot) => {
-        this.setState({
-          tournament: snapshot.val()
-        })
+        let tournaments = snapshot.val();
+        Object.keys(tournaments).map((quarter) => {
+          let quarterObj = tournaments[quarter],
+            prev;
+          Object.keys(quarterObj).map((tournamentId) => {
+            let tournamentObj = quarterObj[tournamentId],
+              now = moment().unix();
+            if (prev === undefined) {
+              prev = tournamentObj;
+            } else {
+              if (now > prev.endDate && now < tournamentObj.endDate) {
+                tournament = tournamentObj;
+              }
+              prev = tournamentObj;
+            }
+          });
+        });
       });
+
+      setTimeout(() => {
+        this.setState({
+          tournament: tournament
+        });
+      }, 1000);
   }
 
   loadPicks = () => {

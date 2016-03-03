@@ -3,7 +3,7 @@ import moment from 'moment'
 import Firebase from 'firebase'
 
 const ref = new Firebase("https://fantasygawlf.firebaseio.com");
-const authData = ref.getAuth()
+let authData;
 
 class MakePick extends React.Component {
 
@@ -16,12 +16,16 @@ class MakePick extends React.Component {
       error: '',
       msg: ''
     }
+  }
 
+  componentDidMount() {
+    authData = ref.getAuth()
     this.getTournaments()
     this.getPicks()
   }
 
   getTournaments = () => {
+    console.log(authData, 'ad')
     // Attach an asynchronous callback to read the data at our posts reference
     let tournamentArray = []
     ref.child('tournaments').orderByChild("startDate").on("value", (snapshot) => {
