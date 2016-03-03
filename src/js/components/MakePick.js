@@ -25,7 +25,6 @@ class MakePick extends React.Component {
   }
 
   getTournaments = () => {
-    console.log(authData, 'ad')
     // Attach an asynchronous callback to read the data at our posts reference
     let tournamentArray = []
     ref.child('tournaments').orderByChild("startDate").on("value", (snapshot) => {
