@@ -18,11 +18,20 @@ class WeekPicks extends React.Component {
   componentDidMount() {
     authData = ref.getAuth()
 
-    this.loadPicks()
-    this.loadCourse()
+    this.loadCourse().then((tournament) => {
+      this.setState({
+        tournament: tournament
+      });
+    }).then(() => {
+      return this.loadPicks()
+    }).then((picks) => {
+      this.setState({
+        picks: picks
+      })
+    })
   }
 
-  loadCourse = () => {
+  loadCourse = () => new Promise((resolve, reject) => {
     let tournament;
     ref.child('tournaments')
       .once("value", (snapshot) => {
@@ -37,22 +46,16 @@ class WeekPicks extends React.Component {
               prev = tournamentObj;
             } else {
               if (now > prev.endDate && now < tournamentObj.endDate) {
-                tournament = tournamentObj;
+                resolve(tournamentObj);
               }
               prev = tournamentObj;
             }
           });
         });
       });
+  })
 
-      setTimeout(() => {
-        this.setState({
-          tournament: tournament
-        });
-      }, 1000);
-  }
-
-  loadPicks = () => {
+  loadPicks = () => new Promise((resolve, reject) => {
     ref.child('picks')
       .once("value", (snapshot) => {
         let picksArray = []
@@ -73,11 +76,9 @@ class WeekPicks extends React.Component {
             }
           }
         }
-        this.setState({
-          picks: picksArray
-        })
+        resolve(picksArray)
       })
-  }
+  })
 
   render() {
     return (
