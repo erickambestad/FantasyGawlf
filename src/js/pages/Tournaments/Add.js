@@ -15,7 +15,9 @@ class AddTournament extends React.Component {
       msg: '',
       tournaments: {}
     }
+  }
 
+  componentDidMount() {
     this.getTournaments()
   }
 

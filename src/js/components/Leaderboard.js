@@ -11,7 +11,9 @@ class Leaderboard extends React.Component {
     this.state = {
       teams: []
     }
+  }
 
+  componentDidMount() {
     this.loadLeaderboard()
   }
 

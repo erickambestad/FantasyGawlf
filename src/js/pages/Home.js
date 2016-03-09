@@ -29,9 +29,6 @@ class Home extends React.Component {
       teamName: null,
       paid: null
     }
-
-
-
   }
 
   componentDidMount() {

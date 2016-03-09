@@ -19,7 +19,9 @@ class Update extends React.Component {
       pickId: pickId,
       userId: userId
     }
+  }
 
+  componentDidMount() {
     ref.child('picks')
       .child(this.state.userId)
       .child(this.state.pickId)

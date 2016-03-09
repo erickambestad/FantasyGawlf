@@ -14,7 +14,9 @@ class Picks extends React.Component {
       picks: [],
       users: {}
     }
+  }
 
+  componentDidMount() {
     this.loadPicks()
     this.getUsers()
   }
