@@ -10,6 +10,8 @@ import MyPicks from '../components/MyPicks'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import WeekPicks from '../components/WeekPicks'
+import LastTournament from '../components/LastTournament'
+import Winnings from '../components/Winnings'
 
 // Get the logged in user
 import Firebase from 'firebase'

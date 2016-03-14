@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import { Link } from 'react-router'
 
 const ref = new Firebase("https://fantasygawlf.firebaseio.com")
 let authData;
@@ -31,6 +32,7 @@ class MyPicks extends React.Component {
           if (picks.hasOwnProperty(key)) {
             picksArray.push({
               id: key,
+              courseId: key,
               course: picks[key].course,
               player: picks[key].player,
               result: picks[key].result,
@@ -62,7 +64,7 @@ class MyPicks extends React.Component {
         return (
           <tr key={Math.random()}>
             <td><strong>{pick.player}</strong></td>
-            <td>{pick.course}</td>
+            <td><Link to={'/tournament-picks/' + pick.courseId}>{pick.course}</Link></td>
             <td>{(pick.result === false) ? '$0' : '$' + (parseInt(pick.result)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}</td>
             <td style={{color: 'red', fontWeight: 'bold', cursor: 'pointer'}}>{(pick.startDate > moment().unix()) ? <span onClick={this.deletePick.bind(this, pick.id)}>X</span> : ''}</td>
           </tr>

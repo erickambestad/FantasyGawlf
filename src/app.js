@@ -9,6 +9,8 @@ import Picks from './js/pages/Picks'
 import Rules from './js/pages/Rules'
 import Update from './js/pages/Update'
 import PickMe from './js/pages/PickMe'
+import UserPicks from './js/pages/UserPicks'
+import TournamentPicks from './js/pages/TournamentPicks'
 
 // Get the logged in user
 import Firebase from 'firebase'
@@ -30,6 +32,8 @@ function requireAdmin(nextState, replaceState) {
 render((
   <Router>
     <Route path="/" component={Home} />
+    <Route path="/user-picks/:userId" component={UserPicks} onEnter={requireAuth} />
+    <Route path="/tournament-picks/:tournamentId" component={TournamentPicks} onEnter={requireAuth} />
     <Route path="/tournament/add" component={AddTournament} onEnter={requireAdmin} />
     <Route path="/picks" component={Picks} onEnter={requireAdmin} />
     <Route path="/pick/update/:userId/:pickId" component={Update} onEnter={requireAdmin} />

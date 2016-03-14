@@ -45,7 +45,7 @@ class WeekPicks extends React.Component {
             if (prev === undefined) {
               prev = tournamentObj;
             } else {
-              if (now > prev.endDate && now < tournamentObj.endDate) {
+              if (now > prev.endDate && now < (tournamentObj.endDate + (60 * 60 * 24))) {
                 resolve(tournamentObj);
               }
               prev = tournamentObj;
