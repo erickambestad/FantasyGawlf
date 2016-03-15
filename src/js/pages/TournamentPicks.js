@@ -82,7 +82,7 @@ class TournamentPicks extends React.Component {
         let picks = snapshot.val()
         Object.keys(picks).map((userId, key) => {
           let picksObj = picks[userId]
-          if (picksObj && picksObj.hasOwnProperty(this.state.tournamentId) && typeof picksObj[this.state.tournamentId] === 'object') {
+          if (picksObj && picksObj.hasOwnProperty(this.state.tournamentId) && typeof picksObj[this.state.tournamentId] === 'object' && picksObj[this.state.tournamentId].result !== false) {
             picksObj[this.state.tournamentId].userId = userId
             picksObj[this.state.tournamentId].team = this.state.users[userId]
             picksArray.push(picksObj[this.state.tournamentId])
@@ -97,7 +97,19 @@ class TournamentPicks extends React.Component {
   }
 
   render() {
-      console.log(this.state.picks)
+
+    let pickArr = (this.state.picks).sort((a, b) => {
+      return a.result - b.result
+    }).reverse().map((pick, key) => {
+      return (
+        <tr key={key}>
+          <td>{pick.team}</td>
+          <td>{pick.player}</td>
+          <td>{(pick.result <= 0) ? '$0' : '$' + (parseInt(pick.result)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}</td>
+        </tr>
+      )
+    })
+
     return (
       <div className="jumbotron">
         <div className="container">
@@ -115,19 +127,7 @@ class TournamentPicks extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {
-                  (this.state.picks).sort((a, b) => {
-                    return a.result - b.result
-                  }).reverse().map((pick, key) => {
-                    return (
-                      <tr key={key}>
-                        <td>{pick.team}</td>
-                        <td>{pick.player}</td>
-                        <td>{(pick.result <= 0) ? '$0' : '$' + (parseInt(pick.result)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}</td>
-                      </tr>
-                    )
-                  })
-                }
+                {pickArr.length > 0 ? pickArr : <tr><td colSpan="3">Not available.</td></tr>}
               </tbody>
             </table>
           </div>

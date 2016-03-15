@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { Link } from 'react-router'
 
 import Firebase from 'firebase'
 var ref = new Firebase("https://fantasygawlf.firebaseio.com")
@@ -14,10 +15,26 @@ class Leaderboard extends React.Component {
   }
 
   componentDidMount() {
-    this.loadLeaderboard()
+    this.getUsers().then((users) => {
+      this.loadLeaderboard(users)
+    })
   }
 
-  loadLeaderboard = () => {
+  getUsers = () => new Promise((resolve, reject) => {
+    let usersList = {}
+    ref.child('users').once("value", (snapshot) => {
+      let users = snapshot.val()
+      for (let user in users) {
+        if (users.hasOwnProperty(user)) {
+          let userObj = users[user]
+          usersList[userObj.team] = user
+        }
+      }
+      resolve(usersList)
+    })
+  })
+
+  loadLeaderboard = (users) => {
     ref.child('leaderboard')
       .once("value", (snapshot) => {
         let leaders = snapshot.val(),
@@ -25,6 +42,7 @@ class Leaderboard extends React.Component {
         for (let team in leaders) {
           let score = leaders[team]
           leaderboardArr.push({
+            team_id: users[team],
             name: team,
             score: score
           })
@@ -36,6 +54,7 @@ class Leaderboard extends React.Component {
   }
 
   render() {
+    /*<Link to={'/'}>Back Home</Link>*/
     return (
       <div>
         <h2>Leaderboard</h2>
@@ -50,10 +69,10 @@ class Leaderboard extends React.Component {
             {
               (this.state.teams).sort((a, b) => {
                 return b.score - a.score
-              }).map((team) => {
+              }).map((team, key) => {
                 return (
-                  <tr key={team.name}>
-                    <td>{team.name}</td>
+                  <tr key={key}>
+                    <td><Link to={'/user-picks/' + team.team_id}>{team.name}</Link></td>
                     <td>
                       {'$' + (parseInt(team.score)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
                     </td>

@@ -19,6 +19,7 @@ class WeekPicks extends React.Component {
     authData = ref.getAuth()
 
     this.loadCourse().then((tournament) => {
+      console.log(tournament, 'tournament')
       this.setState({
         tournament: tournament
       });
@@ -35,10 +36,10 @@ class WeekPicks extends React.Component {
     let tournament;
     ref.child('tournaments')
       .once("value", (snapshot) => {
-        let tournaments = snapshot.val();
+        let tournaments = snapshot.val(),
+          prev;
         Object.keys(tournaments).map((quarter) => {
-          let quarterObj = tournaments[quarter],
-            prev;
+          let quarterObj = tournaments[quarter];
           Object.keys(quarterObj).map((tournamentId) => {
             let tournamentObj = quarterObj[tournamentId],
               now = moment().unix();
@@ -47,8 +48,9 @@ class WeekPicks extends React.Component {
             } else {
               if (now > prev.endDate && now < (tournamentObj.endDate + (60 * 60 * 24))) {
                 resolve(tournamentObj);
+              } else {
+                prev = tournamentObj;
               }
-              prev = tournamentObj;
             }
           });
         });
