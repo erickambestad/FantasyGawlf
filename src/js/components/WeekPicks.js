@@ -19,7 +19,6 @@ class WeekPicks extends React.Component {
     authData = ref.getAuth()
 
     this.loadCourse().then((tournament) => {
-      console.log(tournament, 'tournament')
       this.setState({
         tournament: tournament
       });
