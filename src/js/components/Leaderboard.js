@@ -81,7 +81,7 @@ class Leaderboard extends React.Component {
       li: {
         display: 'inline',
         cursor: 'pointer',
-        color: 'blue',
+        color: '#337ab7',
         textDecoration: 'underline'
       },
       liActive: {
@@ -125,7 +125,7 @@ class Leaderboard extends React.Component {
               }).map((team, key) => {
                 return (
                   <tr key={key}>
-                    <td><Link to={'/user-picks/' + team.team_id}>{team.name}</Link></td>
+                    <td style={(key === 0) ? {fontWeight: 'bold'} : {}}><Link to={'/user-picks/' + team.team_id}>{team.name}</Link></td>
                     <td>
                       {'$' + (parseInt(team.score)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
                     </td>
