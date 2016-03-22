@@ -1,5 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
+import moment from 'moment'
+
+import mixins from '../mixins'
 
 import Firebase from 'firebase'
 var ref = new Firebase("https://fantasygawlf.firebaseio.com")
@@ -36,6 +39,7 @@ class Leaderboard extends React.Component {
 
   loadLeaderboard = (users) => {
     ref.child('leaderboard')
+      .child(mixins.getQuarter(moment().unix()))
       .once("value", (snapshot) => {
         let leaders = snapshot.val(),
           leaderboardArr = []

@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router'
 import moment from 'moment'
 
+import mixins from '../mixins'
+
 import Firebase from 'firebase'
 var ref = new Firebase("https://fantasygawlf.firebaseio.com")
 
@@ -68,15 +70,21 @@ class Picks extends React.Component {
     ref.child('picks').once("value", (snapshot) => {
       let users = snapshot.val()
       for (let user in users) {
-        let team = users[user].team
-        leaderboard[this.state.users[user]] = 0;
-        let userPicks = users[user]
+        let team = users[user].team,
+            userPicks = users[user]
         for (let pick in userPicks) {
-          let pickObj = userPicks[pick]
+          let pickObj = userPicks[pick],
+            quarter = mixins.getQuarter(pickObj.startDate)
+          if (!leaderboard.hasOwnProperty(quarter)) {
+            leaderboard[quarter] = {};
+          }
+          if (!(leaderboard[quarter]).hasOwnProperty(this.state.users[user])) {
+            leaderboard[quarter][this.state.users[user]] = 0;
+          }
           if (pickObj.result === false) {
-            leaderboard[this.state.users[user]] += 0
+            leaderboard[quarter][this.state.users[user]] += 0
           } else {
-            leaderboard[this.state.users[user]] += parseInt(pickObj.result)
+            leaderboard[quarter][this.state.users[user]] += parseInt(pickObj.result)
           }
         }
       }
