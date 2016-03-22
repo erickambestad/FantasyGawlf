@@ -13,11 +13,23 @@ class Leaderboard extends React.Component {
     super(props)
 
     this.state = {
-      teams: []
+      teams: [],
+      quarter: "q1"
     }
   }
 
   componentDidMount() {
+    let currentQuarter = mixins.getQuarter(moment().unix())
+    this.selectQuarter(currentQuarter)
+    this.getUsers().then((users) => {
+      this.loadLeaderboard(users)
+    })
+  }
+
+  selectQuarter = (quarter) => {
+    this.setState({
+      quarter: quarter
+    })
     this.getUsers().then((users) => {
       this.loadLeaderboard(users)
     })
@@ -37,9 +49,9 @@ class Leaderboard extends React.Component {
     })
   })
 
-  loadLeaderboard = (users) => {
+  loadLeaderboard = (users, quarter) => {
     ref.child('leaderboard')
-      .child(mixins.getQuarter(moment().unix()))
+      .child(this.state.quarter)
       .once("value", (snapshot) => {
         let leaders = snapshot.val(),
           leaderboardArr = []
@@ -58,10 +70,47 @@ class Leaderboard extends React.Component {
   }
 
   render() {
-    /*<Link to={'/'}>Back Home</Link>*/
+
+    let styles = {
+      ul: {
+        margin: 0,
+        padding: 0,
+        listStyleType: 'none',
+        textAlign: 'center'
+      },
+      li: {
+        display: 'inline',
+        cursor: 'pointer',
+        color: 'blue',
+        textDecoration: 'underline'
+      },
+      liActive: {
+        display: 'inline',
+        cursor: 'default',
+        fontWeight: 'bold',
+        color: 'black'
+      },
+      liDisabled: {
+        display: 'inline',
+        cursor: 'default',
+        color: 'black'
+      }
+    }
+
     return (
       <div>
         <h2>Leaderboard</h2>
+        <div className="quarter-filters">
+          <ul style={styles.ul}>
+            <li style={(this.state.quarter === 'q1') ? styles.liActive : styles.li} onClick={this.selectQuarter.bind(this, 'q1')}>Q1</li>
+            {" - "}
+            <li style={(this.state.quarter === 'q2') ? styles.liActive : styles.li} onClick={this.selectQuarter.bind(this, 'q2')}>Q2</li>
+            {" - "}
+            <li style={styles.liDisabled}>Q3</li>
+            {" - "}
+            <li style={styles.liDisabled}>Q4</li>
+          </ul>
+        </div>
         <table className="table">
           <thead>
             <tr>
