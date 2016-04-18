@@ -187,7 +187,7 @@ class Home extends React.Component {
                   </div>
                   <div className="col-md-12">
                     <h3><strong>Schedule</strong></h3>
-                    <ul style={{listStyle: 'none', paddingLeft: '0'}}>
+                    <ul style={{listStyle: 'none', paddingLeft: 0}}>
                       <li><strong>Quarter 1:</strong> CareerBuilder Challenge (1/21/16) - Valspar Championship (3/13/2016)</li>
                       <li><strong>Quarter 2:</strong> Arnold Palmer Invitational (3/17/16) - Wells Fargo Championship (5/8/2016)</li>
                       <li><strong>Quarter 3:</strong> THE PLAYERS Championship (5/12/16) - World Golf Championships-Bridgestone Invitational (7/3/2016)</li>

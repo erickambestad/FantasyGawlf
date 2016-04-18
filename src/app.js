@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, Link } from 'react-router'
+import { Router, Route, Link, hashHistory } from 'react-router'
 import { render } from 'react-dom'
 
 import Home from './js/pages/Home'
@@ -30,7 +30,7 @@ function requireAdmin(nextState, replaceState) {
 }
 
 render((
-  <Router>
+  <Router history={hashHistory}>
     <Route path="/" component={Home} />
     <Route path="/user-picks/:userId" component={UserPicks} onEnter={requireAuth} />
     <Route path="/tournament-picks/:tournamentId" component={TournamentPicks} onEnter={requireAuth} />
