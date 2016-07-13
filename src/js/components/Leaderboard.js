@@ -106,9 +106,9 @@ class Leaderboard extends React.Component {
             {" - "}
             <li style={(this.state.quarter === 'q2') ? styles.liActive : styles.li} onClick={this.selectQuarter.bind(this, 'q2')}>Q2</li>
             {" - "}
-            <li style={styles.liDisabled}>Q3</li>
+            <li style={(this.state.quarter === 'q3') ? styles.liActive : styles.li} onClick={this.selectQuarter.bind(this, 'q3')}>Q3</li>
             {" - "}
-            <li style={styles.liDisabled}>Q4</li>
+            <li style={(this.state.quarter === 'q4') ? styles.liActive : styles.li} onClick={this.selectQuarter.bind(this, 'q4')}>Q4</li>
           </ul>
         </div>
         <table className="table">
